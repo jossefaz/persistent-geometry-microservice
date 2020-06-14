@@ -1,0 +1,37 @@
+version: "3"
+
+volumes:
+  geodb-data:
+services:
+  db:
+    image: kartoza/postgis:latest
+    volumes:
+      - geodb-data:/var/lib/postgresql
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=gis,gwc
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASS=manti2468
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    restart: on-failure
+
+  db-admin:
+    # user: pgadmin4@pgadmin.org
+    # password: admin
+    build:
+      context: ./pgadmin4
+    ports:
+      - "5050:5050"
+    depends_on:
+      - db
+    healthcheck:
+      test: curl --fail -s http://localhost:5050/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - MAIL_SERVER=db
+      - MAIL_PORT=5432
+      - MAIL_USERNAME=postgres
+      - MAIL_PASSWORD=manti2468
