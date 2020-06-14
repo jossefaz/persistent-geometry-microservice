@@ -1,46 +1,32 @@
 package com.yossefaz.peristentgeometry.controller;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.geom.Polygon;
 import com.yossefaz.peristentgeometry.model.PersistentGeometry;
-import com.yossefaz.peristentgeometry.model.dao.PersistentGeometryImpl;
 import com.yossefaz.peristentgeometry.model.dao.PersistentGeometryService;
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.yossefaz.peristentgeometry.utils.wktParser;
-
-import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
 public class PersistenGeometryController {
 
-@Autowired
-private PersistentGeometryService persistentGeometryService;
+    @Autowired
+    private PersistentGeometryService persistentGeometryService;
 
-    @GetMapping(value = "persistentGeometry")
-    public ResponseEntity<List<PersistentGeometry>> listeGeom() {
-        return new ResponseEntity<>(persistentGeometryService.findAll(), HttpStatus.OK);
+    @CrossOrigin(origins = "*")
+    @PostMapping(value="/persistentGeometry")
+    public ResponseEntity createNewGeom(@RequestBody Map<String, String> payload) throws IOException {
+        String wkt = payload.get("geometry");
+        Polygon newpoly = wktParser.wktToGeometry(wkt);
+        PersistentGeometry newPersistantGeom = PersistentGeometry.builder().geometry(newpoly).build();
+        PersistentGeometry newGeom = persistentGeometryService.save(newPersistantGeom);
+        var headers = new HttpHeaders();
+        headers.add("Location", "/persistentGeometry/" + newGeom.getId().toString() );
+        return new ResponseEntity(headers, HttpStatus.CREATED);
     }
-
-    //persistentGeometry/id
-    @GetMapping(value = "persistentGeometry/{id}")
-    public ResponseEntity<PersistentGeometry> getPGobject(@PathVariable UUID id) {
-
-        PersistentGeometry persistentGeometry = PersistentGeometry.builder()
-                .id(UUID.randomUUID())
-                .geometry(wktParser.wktToGeometry("POINT(-105 40)"))
-                .build();
-
-        return new ResponseEntity<>(persistentGeometry, HttpStatus.OK);
-
-    }
-
 }

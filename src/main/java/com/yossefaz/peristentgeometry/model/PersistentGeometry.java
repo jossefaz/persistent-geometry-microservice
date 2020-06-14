@@ -4,27 +4,35 @@ import com.bedatadriven.jackson.datatype.jts.serialization.GeometryDeserializer;
 import com.bedatadriven.jackson.datatype.jts.serialization.GeometrySerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.GenericGenerator;
 
 
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class PersistentGeometry {
-
+@Entity
+@Table(name = "persistent_geometry")
+public class PersistentGeometry implements Serializable {
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "VARCHAR(255)")
     private UUID id;
 
-    @Type(type = "org.hibernate.spatial.GeometryType")
     @JsonSerialize(using = GeometrySerializer.class)
     @JsonDeserialize(using = GeometryDeserializer.class)
-    private Geometry geometry;
+    @Column(name = "geometry", columnDefinition = "geometry(Polygon,4326)")
+    private Polygon geometry;
 
 }

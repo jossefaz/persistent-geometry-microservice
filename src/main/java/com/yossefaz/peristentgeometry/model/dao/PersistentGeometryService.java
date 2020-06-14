@@ -1,13 +1,7 @@
 package com.yossefaz.peristentgeometry.model.dao;
-
 import com.yossefaz.peristentgeometry.model.PersistentGeometry;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
 import java.util.UUID;
 
-public interface PersistentGeometryService {
-
-    List<PersistentGeometry> findAll();
-    PersistentGeometry findById(UUID id);
-    PersistentGeometry save(PersistentGeometryService persistentGeometryService);
-}
+public interface PersistentGeometryService extends CrudRepository<PersistentGeometry, UUID> {}
