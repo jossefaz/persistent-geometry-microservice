@@ -1,4 +1,4 @@
-package com.yossefaz.peristentgeometry.model.dao;
+package com.yossefaz.peristentgeometry.model.service;
 import com.yossefaz.peristentgeometry.model.PersistentGeometry;
 import org.springframework.data.repository.CrudRepository;
 
