@@ -1,10 +1,9 @@
-package com.yossefaz.peristentgeometry.model;
+package com.yossefaz.peristentgeometry.model.Entities;
 
 import com.bedatadriven.jackson.datatype.jts.serialization.GeometryDeserializer;
 import com.bedatadriven.jackson.datatype.jts.serialization.GeometrySerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.vividsolutions.jts.geom.Polygon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +21,8 @@ import java.util.UUID;
 @Data
 @Builder
 @Entity
-@Table(name = "persistent_geometry")
-public class PersistentGeometry implements Serializable {
+@Table(name = "persistent_polygon")
+public class PersistentPolygon implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -32,7 +31,7 @@ public class PersistentGeometry implements Serializable {
 
     @JsonSerialize(using = GeometrySerializer.class)
     @JsonDeserialize(using = GeometryDeserializer.class)
-    @Column(name = "geometry", columnDefinition = "geometry(Polygon,4326)")
-    private Polygon geometry;
+    @Column(name = "geometry", columnDefinition = "geometry(Polygon,2039)")
+    private com.vividsolutions.jts.geom.Polygon geometry;
 
 }
