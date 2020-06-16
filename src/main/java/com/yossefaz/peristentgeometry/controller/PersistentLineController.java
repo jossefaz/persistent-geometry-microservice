@@ -1,6 +1,8 @@
 package com.yossefaz.peristentgeometry.controller;
 
+import com.yossefaz.peristentgeometry.model.DTO.PersistentLineDTO;
 import com.yossefaz.peristentgeometry.model.DTO.PersistentPolygonDTO;
+import com.yossefaz.peristentgeometry.model.Entities.PersistentLine;
 import com.yossefaz.peristentgeometry.model.Entities.PersistentPolygon;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +25,21 @@ import java.util.UUID;
 public class PersistentLineController {
 
     @Autowired
-    private PersistentPolygonDTO persistentPolygonDTO;
+    private PersistentLineDTO persistentLineDTO;
 
     @GetMapping
-    public ResponseEntity<List<PersistentPolygon>> getAllGeometryObjects() {
-        return new ResponseEntity(persistentPolygonDTO.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<PersistentLine>> getAllGeometryObjects() {
+        return new ResponseEntity(persistentLineDTO.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PersistentPolygon> getPGobject(@PathVariable UUID id) {
-        return new ResponseEntity<>(persistentPolygonDTO.getOne(id), HttpStatus.OK);
+    public ResponseEntity<PersistentLine> getPGobject(@PathVariable UUID id) {
+        return new ResponseEntity<>(persistentLineDTO.getOne(id), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Map<String, UUID>> createNewGeom(@RequestBody Map<String, String> payload) throws IOException {
-        UUID newCreatedId = persistentPolygonDTO.create(payload);
+        UUID newCreatedId = persistentLineDTO.create(payload);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCreatedId).toUri();
         return ResponseEntity.created(location).body(Collections.singletonMap("id", newCreatedId));
     }
@@ -45,12 +47,12 @@ public class PersistentLineController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void DeleteGeom(@PathVariable UUID id) {
-        persistentPolygonDTO.delete(id);
+        persistentLineDTO.delete(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void updateGeom(@RequestBody Map<String, String> payload) {
-        persistentPolygonDTO.update(payload);
+        persistentLineDTO.update(payload);
     }
 }
