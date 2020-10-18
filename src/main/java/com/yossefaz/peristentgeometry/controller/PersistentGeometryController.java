@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("persistentGeometry")
-//public class PersistentGeometryController {
+public class PersistentGeometryController {
 
     @Autowired
     private PersistentLineDTO persistentLineDTO;

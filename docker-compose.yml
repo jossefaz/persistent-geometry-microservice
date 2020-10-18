@@ -7,6 +7,7 @@ services:
     image: kartoza/postgis:latest
     volumes:
       - geodb-data:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5434:5432"
     environment:
